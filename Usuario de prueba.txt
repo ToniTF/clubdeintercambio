@@ -6,4 +6,10 @@ Pepe De Juan
 password: (9154Pepe)
 
 
+Juan
+juan@juan.es
+Juan De Pepe
+password: (9154Juan)
+
+
 Localhost:8000
