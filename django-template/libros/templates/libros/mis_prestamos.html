@@ -1,0 +1,129 @@
+{% extends 'libros/base.html' %}
+
+{% block title %}Mis Préstamos - Club de Intercambio{% endblock %}
+
+{% block content %}
+<h1>Mis Préstamos</h1>
+
+<ul class="nav nav-tabs mb-4" id="prestamosTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="solicitados-tab" data-bs-toggle="tab" data-bs-target="#solicitados" type="button" role="tab">
+            Préstamos que he solicitado
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="recibidos-tab" data-bs-toggle="tab" data-bs-target="#recibidos" type="button" role="tab">
+            Solicitudes que he recibido
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="prestamosTabContent">
+    <div class="tab-pane fade show active" id="solicitados" role="tabpanel">
+        <h3>Préstamos que he solicitado</h3>
+        
+        {% if prestamos_solicitados %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Libro</th>
+                        <th>Propietario</th>
+                        <th>Fecha de solicitud</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prestamo in prestamos_solicitados %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'libros:detalle_libro' prestamo.libro.id %}">
+                                {{ prestamo.libro.titulo }}
+                            </a>
+                        </td>
+                        <td>{{ prestamo.libro.usuario.username }}</td>
+                        <td>{{ prestamo.fecha_solicitud|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if prestamo.estado.descripcion == 'Solicitado' %}bg-warning
+                                {% elif prestamo.estado.descripcion == 'Aceptado' %}bg-success
+                                {% elif prestamo.estado.descripcion == 'Cancelado' %}bg-danger
+                                {% elif prestamo.estado.descripcion == 'Devuelto' %}bg-info
+                                {% endif %}">
+                                {{ prestamo.estado.descripcion }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if prestamo.estado.descripcion == 'Solicitado' or prestamo.estado.descripcion == 'Aceptado' %}
+                            <a href="{% url 'libros:cancelar_prestamo' prestamo.id %}" class="btn btn-sm btn-danger">Cancelar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No has solicitado ningún préstamo todavía.
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="tab-pane fade" id="recibidos" role="tabpanel">
+        <h3>Solicitudes que he recibido</h3>
+        
+        {% if prestamos_recibidos %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Libro</th>
+                        <th>Solicitante</th>
+                        <th>Fecha de solicitud</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prestamo in prestamos_recibidos %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'libros:detalle_libro' prestamo.libro.id %}">
+                                {{ prestamo.libro.titulo }}
+                            </a>
+                        </td>
+                        <td>{{ prestamo.usuario.username }}</td>
+                        <td>{{ prestamo.fecha_solicitud|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if prestamo.estado.descripcion == 'Solicitado' %}bg-warning
+                                {% elif prestamo.estado.descripcion == 'Aceptado' %}bg-success
+                                {% elif prestamo.estado.descripcion == 'Cancelado' %}bg-danger
+                                {% elif prestamo.estado.descripcion == 'Devuelto' %}bg-info
+                                {% endif %}">
+                                {{ prestamo.estado.descripcion }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if prestamo.estado.descripcion == 'Solicitado' %}
+                            <a href="{% url 'libros:aceptar_prestamo' prestamo.id %}" class="btn btn-sm btn-success">Aceptar</a>
+                            <a href="{% url 'libros:cancelar_prestamo' prestamo.id %}" class="btn btn-sm btn-danger">Rechazar</a>
+                            {% elif prestamo.estado.descripcion == 'Aceptado' %}
+                            <a href="{% url 'libros:devolver_prestamo' prestamo.id %}" class="btn btn-sm btn-info">Marcar como devuelto</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No has recibido ninguna solicitud de préstamo todavía.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

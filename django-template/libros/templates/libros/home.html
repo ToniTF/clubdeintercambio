@@ -1,0 +1,48 @@
+{% extends 'libros/base.html' %}
+
+{% block title %}Inicio - Club de Intercambio{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Bienvenido al Club de Intercambio de Libros</h1>
+    <p class="lead">Explora, comparte y disfruta de la lectura compartiendo libros con otros usuarios.</p>
+    {% if not user.is_authenticated %}
+    <hr class="my-4">
+    <p>Para comenzar a compartir tus libros, inicia sesión o regístrate.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'libros:registro' %}" role="button">Registrarse</a>
+    <a class="btn btn-outline-primary btn-lg" href="{% url 'libros:login' %}" role="button">Iniciar sesión</a>
+    {% endif %}
+</div>
+
+<h2 class="my-4">Libros disponibles</h2>
+
+{% if libros %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for libro in libros %}
+    <div class="col">
+        <div class="card h-100 book-card">
+            {% if libro.imagen %}
+            <img src="{{ libro.imagen.url }}" class="card-img-top book-img" alt="{{ libro.titulo }}">
+            {% else %}
+            <div class="card-img-top book-img bg-secondary d-flex align-items-center justify-content-center text-white">
+                <span>Sin imagen</span>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ libro.titulo }}</h5>
+                <p class="card-text">{{ libro.descripcion|truncatewords:20 }}</p>
+                <p class="card-text"><small class="text-muted">Propietario: {{ libro.usuario.username }}</small></p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'libros:detalle_libro' libro.id %}" class="btn btn-primary">Ver detalles</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    No hay libros disponibles en este momento.
+</div>
+{% endif %}
+{% endblock %}

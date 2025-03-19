@@ -1,0 +1,43 @@
+{% extends 'libros/base.html' %}
+
+{% block title %}Mis Libros - Club de Intercambio{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Mis Libros</h1>
+    <a href="{% url 'libros:nuevo_libro' %}" class="btn btn-success">Añadir nuevo libro</a>
+</div>
+
+{% if libros %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for libro in libros %}
+    <div class="col">
+        <div class="card h-100 book-card">
+            {% if libro.imagen %}
+            <img src="{{ libro.imagen.url }}" class="card-img-top book-img" alt="{{ libro.titulo }}">
+            {% else %}
+            <div class="card-img-top book-img bg-secondary d-flex align-items-center justify-content-center text-white">
+                <span>Sin imagen</span>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ libro.titulo }}</h5>
+                <p class="card-text">{{ libro.descripcion|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group w-100">
+                    <a href="{% url 'libros:detalle_libro' libro.id %}" class="btn btn-primary">Ver</a>
+                    <a href="{% url 'libros:editar_libro' libro.id %}" class="btn btn-warning">Editar</a>
+                    <a href="{% url 'libros:eliminar_libro' libro.id %}" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    No tienes libros registrados. ¡Añade tu primer libro!
+</div>
+{% endif %}
+{% endblock %}

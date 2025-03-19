@@ -1,0 +1,39 @@
+{% extends 'libros/base.html' %}
+
+{% block title %}{{ libro.titulo }} - Club de Intercambio{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        {% if libro.imagen %}
+        <img src="{{ libro.imagen.url }}" class="img-fluid rounded" alt="{{ libro.titulo }}">
+        {% else %}
+        <div class="bg-secondary text-white p-5 text-center rounded">
+            <h3>Sin imagen</h3>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <h1>{{ libro.titulo }}</h1>
+        <p class="text-muted">Propietario: {{ libro.usuario.username }}</p>
+        <hr>
+        <h5>Descripción</h5>
+        <p>{{ libro.descripcion }}</p>
+        
+        {% if libro.usuario == user %}
+        <div class="mt-4">
+            <a href="{% url 'libros:editar_libro' libro.id %}" class="btn btn-warning">Editar</a>
+            <a href="{% url 'libros:eliminar_libro' libro.id %}" class="btn btn-danger">Eliminar</a>
+        </div>
+        {% elif puede_solicitar %}
+        <div class="mt-4">
+            <a href="{% url 'libros:solicitar_prestamo' libro.id %}" class="btn btn-primary">Solicitar préstamo</a>
+        </div>
+        {% endif %}
+        
+        <div class="mt-4">
+            <a href="{% url 'libros:home' %}" class="btn btn-secondary">Volver al inicio</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
