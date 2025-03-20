@@ -1,0 +1,23 @@
+Si salta un problema al instalar pillow en los requerimientos, puede pasar con windows, 
+ejecutarlo de la siguiente manera:
+
+(.venv) PS C:\python\django\clubdeintercambio> pip install --only-binary :all: pillow
+
+
+
+
+Usuarios de pruebas
+
+Pepe
+Pepe@pepe.es
+Pepe De Juan
+password: (9154Pepe)
+
+
+Juan
+juan@juan.es
+Juan De Pepe
+password: (9154Juan)
+
+
+Localhost:8000
